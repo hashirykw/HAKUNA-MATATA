@@ -193,6 +193,7 @@ html:not(.m) .ld1,html:not(.m) .loader,html:not(.m) .ld__meta{display:none}
 .menu-open .burger i:first-child{transform:translateY(3.5px) rotate(45deg)}
 .menu-open .burger i:last-child{transform:translateY(-3.5px) rotate(-45deg)}
 @media (max-width:1000px){.nav__call{display:none}}
+@media (max-width:600px){:root{--nav-h:52px}.nav{top:calc(8px + env(safe-area-inset-top,0px));width:calc(100% - 16px)}.brand svg{width:52px}.cartbtn,.burger{width:42px;height:42px}}
 @media (max-width:900px){.nav__links{display:none}.burger{display:grid}}
 .mnav{position:fixed;inset:0;z-index:140;background:oklch(15.5% .012 70 / .82);-webkit-backdrop-filter:blur(26px) saturate(1.5);backdrop-filter:blur(26px) saturate(1.5);display:flex;flex-direction:column;justify-content:center;padding:calc(var(--nav-h) + 40px) var(--gutter) 40px;visibility:hidden;opacity:0;transition:opacity .5s var(--ease-out),visibility 0s .5s}
 .menu-open .mnav{visibility:visible;opacity:1;transition:opacity .5s var(--ease-out)}
@@ -417,13 +418,22 @@ html.m .rv{opacity:0;transform:translateY(40px)}
 @media (max-width:760px){.ph__grid{grid-template-columns:minmax(0,1fr)}.ph__img{justify-self:start;height:130px!important;margin-top:var(--space-sm)}}
 
 /* menu */
-.tabs{position:sticky;top:calc(var(--nav-h) + 22px + env(safe-area-inset-top,0px));z-index:20;margin-bottom:var(--space-2xl)}
-.tabs__in{display:flex;gap:6px;align-items:center;padding:6px;border-radius:var(--radius-pill);overflow-x:auto;scrollbar-width:none}
-.tabs__in::-webkit-scrollbar{display:none}
+.tabs{position:sticky;top:calc(var(--nav-h) + 18px + env(safe-area-inset-top,0px));z-index:20;margin-bottom:var(--space-2xl)}
+.tabs__in{display:flex;gap:8px;align-items:center;padding:6px;border-radius:var(--radius-pill);background:linear-gradient(150deg,oklch(26% .016 70 / .86),oklch(17% .013 70 / .9))}
+.tabs__chips{display:flex;gap:6px;flex:1 1 auto;min-width:0;overflow-x:auto;scrollbar-width:none;scroll-snap-type:x proximity;-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent)}
+.tabs__chips::-webkit-scrollbar{display:none}
+.tabs__chips .tab{scroll-snap-align:start}
+@media (max-width:760px){
+  .tabs{top:calc(var(--nav-h) + 14px + env(safe-area-inset-top,0px));margin-inline:calc(var(--gutter) * -.5)}
+  .tabs__in{flex-direction:column;align-items:stretch;gap:6px;border-radius:22px;padding:8px}
+  .tabs .search{order:-1;flex:none;margin:0}
+  .tabs .search input{min-height:44px;font-size:16px}
+  .tabs__chips .tab{min-height:38px;padding:0 15px;font-size:.8rem}
+}
 .tab{flex:none;min-height:42px;padding:0 18px;border-radius:var(--radius-pill);font-weight:700;font-size:var(--text-sm);color:var(--c-mute);white-space:nowrap;transition:color var(--dur-base),background var(--dur-base)}
 .tab:hover{color:var(--c-cream)}
 .tab[aria-current="true"]{background:linear-gradient(135deg,var(--c-gold-hi),var(--c-gold));color:var(--c-coal)}
-.search{position:relative;flex:1 0 210px;margin-left:auto}
+.search{position:relative;flex:0 0 260px;margin-left:auto}
 .search input{width:100%;min-height:42px;padding:0 16px 0 40px;border-radius:var(--radius-pill);border:1px solid oklch(100% 0 0 / .14);background:oklch(0% 0 0 / .25);font-size:var(--text-sm);transition:border-color var(--dur-base)}
 .search input:focus{border-color:var(--c-gold);outline:none;box-shadow:0 0 0 3px var(--c-gold-dim)}
 .search svg{position:absolute;left:14px;top:50%;translate:0 -50%;width:16px;height:16px;color:var(--c-faint)}
@@ -810,14 +820,9 @@ html.m .rv{opacity:0;transform:translateY(40px)}
   </header>
   <div class="wrap">
     <div class="tabs" role="navigation" aria-label="Menu sections">
-      <div class="tabs__in glass glass--strong" id="tabs">
-        <button class="tab" data-t="loaded" aria-current="true">Pizza cheesy</button>
-        <button class="tab" data-t="saucy">Saucy</button>
-        <button class="tab" data-t="flavour">Flavour</button>
-        <button class="tab" data-t="masala">Masala</button>
-        <button class="tab" data-t="extras">Dips</button>
-        <button class="tab" data-t="drinks">Drinks</button>
+      <div class="tabs__in glass glass--strong">
         <label class="search"><span class="sr">Search the menu</span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><input id="q" type="search" placeholder="Search — try “peri” or “cheese”" autocomplete="off"></label>
+        <div class="tabs__chips" id="tabs"><button class="tab" data-t="loaded" aria-current="true">Pizza cheesy</button><button class="tab" data-t="saucy">Saucy</button><button class="tab" data-t="flavour">Flavour</button><button class="tab" data-t="masala">Masala</button><button class="tab" data-t="extras">Dips</button><button class="tab" data-t="drinks">Drinks</button></div>
       </div>
     </div>
     <p class="empty-search" id="noRes"></p>
@@ -1129,7 +1134,9 @@ q.addEventListener('input', () => {
     let shown = 0; $$('.mi', sec).forEach(c => { const hit = !v || c.dataset.name.includes(v); c.classList.toggle('is-hidden', !hit); if (hit) { shown++; c.style.opacity = 1; c.style.transform = 'none'; } });
     sec.style.display = shown ? '' : 'none'; if (shown) any = true;
   });
+  const drinks = $('#m-drinks'), dHit = !v || /drink|cola|coke|soda|next/.test(v); drinks.style.display = dHit ? '' : 'none'; if (v && dHit) any = true;
   noRes.style.display = any ? 'none' : 'block';
+  clearTimeout(q._t); q._t = setTimeout(() => { const firstSec = $$('#p-menu .msec').find(x => x.style.display !== 'none'); const target = v ? (any ? firstSec : noRes) : null; if (target) jumpTo(target); }, 350);
   noRes.textContent = any ? '' : `Nothing on the board called “${q.value.trim()}”. Try “cheese”, “peri” or “garlic”.`;
   if (HAS_GSAP) ScrollTrigger.refresh();
 });
@@ -1209,7 +1216,11 @@ const ROUTES = ['home', 'menu', 'deals', 'order', 'visit'];
 const LABEL = { home: 'Home', menu: 'Menu', deals: 'Deals', order: 'Your order', visit: 'Visit' };
 const parse = () => { const h = location.hash.replace(/^#\/?/, '').split('?')[0]; return ROUTES.includes(h) ? h : 'home'; };
 let current = null, ctx = null, busy = false, pending = null, lenis = null, pendingJump = null, pendingFilter = null;
-const jumpTo = t => { const el = typeof t === 'string' ? $(t) : t; if (!el) return; if (lenis) lenis.scrollTo(el, { offset: -150, duration: 1.2 }); else el.scrollIntoView({ behavior: RM ? 'auto' : 'smooth' }); };
+const jumpTo = t => {
+  const el = typeof t === 'string' ? $(t) : t; if (!el) return;
+  const bar = $('.page.is-active .tabs'), off = -((bar ? bar.offsetHeight + 18 : 0) + $('#nav').offsetHeight + 34);
+  if (lenis) lenis.scrollTo(el, { offset: off, duration: 1.2 }); else scrollTo({ top: el.getBoundingClientRect().top + scrollY + off, behavior: RM ? 'auto' : 'smooth' });
+};
 function setActiveLinks(r) {
   $$('[data-r]').forEach(a => a.removeAttribute('aria-current'));
   $$(`[data-r="${r}"]`).forEach(a => a.setAttribute('aria-current', 'page'));
@@ -1340,8 +1351,9 @@ const PAGE = {
     return () => { gsap.ticker.remove(tk); mm.revert(); };
   },
   menu() {
+    const spyLine = () => $('#nav').offsetHeight + 18 + $('#p-menu .tabs').offsetHeight + 40;
     const tabs = $$('#tabs .tab'), setTab = id => tabs.forEach(t => t.setAttribute('aria-current', t.dataset.t === id ? 'true' : 'false'));
-    $$('#p-menu .msec').forEach(sec => ScrollTrigger.create({ trigger: sec, start: 'top 45%', end: 'bottom 45%', onToggle: s => { if (s.isActive) { setTab(sec.dataset.sec); const t = tabs.find(x => x.dataset.t === sec.dataset.sec); t && t.scrollIntoView({ block: 'nearest', inline: 'center' }); } } }));
+    $$('#p-menu .msec').forEach(sec => ScrollTrigger.create({ trigger: sec, start: () => 'top ' + spyLine() + 'px', end: () => 'bottom ' + spyLine() + 'px', onToggle: s => { if (s.isActive) { setTab(sec.dataset.sec); const t = tabs.find(x => x.dataset.t === sec.dataset.sec), row = $('#tabs'); if (t) row.scrollTo({ left: t.offsetLeft - row.clientWidth / 2 + t.offsetWidth / 2, behavior: 'smooth' }); } } }));
   },
   deals() {},
   order() { gsap.from('#p-order .panel', { y: 50, opacity: 0, duration: 1, ease: E, stagger: .12, delay: .3 }); },
@@ -1493,7 +1505,7 @@ if (window.Lenis) {
 show(first); mount(first);
 gsap.set('.curtain__a, .curtain__b', { yPercent: 100 });
 const nav = $('#nav');
-ScrollTrigger.create({ start: 0, end: 'max', onUpdate: s => { nav.classList.toggle('is-hidden', s.direction === 1 && s.scroll() > 320 && !root.classList.contains('menu-open') && !root.classList.contains('bot-open')); gsap.set('.progress', { scaleX: s.progress }); } });
+ScrollTrigger.create({ start: 0, end: 'max', onUpdate: s => gsap.set('.progress', { scaleX: s.progress }) });
 
 // preloader: logo writes itself → hero shows through MATATA → dive through the T
 const ld1 = $('.ld1'), loader = $('.loader'), metas = $$('.ld__meta'), lc = $('#lc'), kw = $('.knock'), ks = $('.knock__s');
